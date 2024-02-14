@@ -1,28 +1,81 @@
 {% extends 'front.html.twig' %}
 
 {% block logout %}
- <header>
 
-     <ul class="navbar-nav ml-auto mt-10">
-         <li class="nav-item">
-             <a class="nav-link login-button" href="{{ path('app_logout') }}">Logout</a>
-         </li>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <header>
+        <ul class="navbar-nav ml-auto mt-10">
+            <li class="nav-item">
+                &nbsp;&nbsp;
+                <a class="fas fa-power-off fa-lg" href="{{ path('app_logout') }}"></a>
+            </li>
+        </ul>
+    </header>
+{% endblock %}
 
-     </ul>
- </header>
+{% block edit_account %}
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>User Information</title>
+        <!-- Your custom CSS styles can go here -->
+        <style>
+            /* Add any custom styles here */
+            .navbar-nav {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
 
+            .nav-item {
+                position: relative;
+            }
+
+            .dropdown-content {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                background-color: #f9f9f9;
+                min-width: 160px;
+                box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+                z-index: 1;
+            }
+
+            .nav-item:hover .dropdown-content {
+                display: block;
+            }
+
+            /* Style for user's name and surname */
+            .user-name {
+                font-size: 18px; /* Adjust font size as needed */
+                font-weight: bold; /* Optionally, make it bold */
+            }
+        </style>
+    </head>
+    <header>
+        <ul class="navbar-nav ml-auto mt-10">
+            <li class="nav-item">
+                <a class="fa fa-bars"></a>&nbsp;&nbsp;<span class="user-name">{{ app.user.getNom() }} {{ app.user.getPrenom() }}</span>
+                <div class="dropdown-content">
+                    <h>Your Profile</h>
+                    <br>
+                    <a href="{{ path('user_show_details', { id: app.user.getId() }) }}">User Information</a>
+                    <br>
+                    <a href="#">My Products</a>
+                    <br>
+                    <a href="#">My Products</a>
+                    <br>
+                    <a href="#">My Products</a>
+                    <br>
+                    <a href="#">My Products</a>
+                    <br>
+                    <a href="#">My Products</a>
+                </div>
+            </li>
+        </ul>
+    </header>
 {% endblock %}
 {% block body %}
-    {% if app.user %}
-        <div class="mb-3">
-            Welcome {{ app.user.getNom() }} {{ app.user.getPrenom() }}
-        </div>
 
-        <h2>Your Products</h2>
-        <ul>
-            {% for product in products %}
-                <li>{{ product.getNomProduct() }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
 {% endblock %}

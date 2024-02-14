@@ -9,10 +9,15 @@
                         <h3 class="bg-gray p-4">Login Now</h3>
                         <form method="post">
                             <fieldset class="p-4">
+                                {% if error %}
+                                    <div class="alert alert-danger" role="alert">
+                                        {{ error.messageKey|trans(error.messageData, 'security') }}
+                                    </div>
+                                {% endif %}
                                 <label for="username">Mail</label>
-                                <input type="text" value="{{ last_username }}" name="_username" id="username" class="form-control mb-3" autocomplete="username" required autofocus>
+                                <input type="text" value="{{ last_username }}" name="_username" id="username" class="form-control mb-3" >
                                 <label for="password">Password</label>
-                                <input type="password" name="_password" id="password" class="form-control mb-3" autocomplete="current-password" required>
+                                <input type="password" name="_password" id="password" class="form-control mb-3" >
                                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
                                 {#
@@ -29,7 +34,11 @@
                                 <button class="btn btn-primary font-weight-bold mt-3" type="submit">
                                     Log in
                                 </button>
+                                <br>
                                 <a class="mt-3 d-inline-block text-primary" href="{{ path('new_user') }}">Register Now</a>
+                                <br>
+                                <a class="mt-3 d-inline-block text-primary" href="{{ path('user_password_forgot') }}">Forgot Passowrd</a>
+
                             </fieldset>
                         </form>
 

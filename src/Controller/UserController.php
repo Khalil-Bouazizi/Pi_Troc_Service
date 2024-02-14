@@ -2,10 +2,10 @@
 
 namespace App\Controller;
 
+use App\Form\UserModifyType;
+use App\Form\UserType;
+use App\Services\Mailer;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\User;
 use App\Form\UserAddType;
@@ -17,27 +17,29 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class UserController extends AbstractController
 {
     private UserPasswordHasherInterface $hasher;
+    private Mailer $mailer ;
 
-    public function __construct(UserPasswordHasherInterface $hasher)
+    public function __construct(UserPasswordHasherInterface $hasher,Mailer $mailer)
     {
         $this->hasher = $hasher;
+        $this->mailer = $mailer ;
     }
 
     // add user signup
     #[Route('/user/new', name: 'new_user')]
-    public function addUser(Request $request, UserRepository $userRepository): Response
+    public function addUser(Request $request, UserRepository $userRepository,Mailer $mailer): Response
     {
         $user = new User();
         $entityManager = $this->getDoctrine()->getManager();
         $form = $this->createForm(UserAddType::class);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $form->getData();
             $newUser = new User();
             $newUser->setNom($user->getNom());
             $newUser->setPrenom($user->getPrenom());
             $newUser->setMail($user->getMail());
+            $this->mailer->sendMail($user->getMail());
             $newUser->setTel($user->getTel());
             $newUser->setGender($user->getGender());
             $newUser->setAge($user->getAge());
@@ -57,6 +59,7 @@ class UserController extends AbstractController
                 $newUser->setConfirmpassword($hashedPassword2);
                 $entityManager->persist($newUser);
                 $entityManager->flush();
+                $this->addFlash('success','Check You Mail For Verification');
                 return $this->redirectToRoute('new_user');
             }
         }
@@ -98,5 +101,50 @@ class UserController extends AbstractController
         return $this->redirectToRoute('user_display');
     }
 
+    //modify user
 
+    //forgot password user on login page
+    #[Route('/user/forgotpassword', name: 'user_password_forgot')]
+    public function forgotPassword(Request $request): Response
+    {
+        $form = $this->createForm(UserType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $mail = $form->get('mail')->getData();
+            $entityManager = $this->getDoctrine()->getManager();
+            $user = $entityManager->getRepository(User::class)->findOneBy(['mail' => $mail]);
+            if ($user) {
+                $this->addFlash('success', 'Check your email for password reset instructions.');
+            } else {
+                $this->addFlash('error', 'Invalid email address.');
+            }
+
+            return $this->redirectToRoute('user_password_forgot');
+        }
+
+        return $this->render('user_forgot_password.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+    #[Route('/user/modify', name: 'user_modify')]
+    public function modifyUser(Request $request): Response
+    {
+        $current_user = $this->getUser();
+        $user = new User();
+        $entityManager = $this->getDoctrine()->getManager();
+        $form = $this->createForm(UserModifyType::class);
+        $form->handleRequest($request);
+        return $this->render('HomeOn.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+    #[Route('/{id}', name: 'user_show_details')]
+    public function show_detail(UserRepository $repository, $id) : Response
+    {
+        $user = $repository->find($id);
+        return $this->render('user_display_front.html.twig',[
+            'user' => $user,
+        ]);
+    }
 }

@@ -20,25 +20,12 @@ class UserAddType extends AbstractType
         $builder
             ->add('nom', TextType::class)
             ->add('prenom', TextType::class)
-            ->add('mail', TextType::class, [
-                'constraints' => [new Assert\Email()],
+            ->add('mail', TextType::class)
+            ->add('date_birthday', DateType::class, [
+                'widget' => 'single_text',
+                'years' => range(1960, date('Y')),
             ])
-            ->add('date_birthday', DateType::class) // Use DateType from Symfony form component
-            ->add('tel', TextType::class, [
-                'constraints' => [
-                    new Assert\Length([
-                        'min' => 8,
-                        'max' => 8,
-                        'exactMessage' => 'The telephone number must consist of exactly 8 characters.',
-                    ]),
-                    new Assert\Regex([
-                        'pattern' => '/^\d{8}$/',
-                        'message' => 'The telephone number must consist of 8 numeric characters.',
-                    ]),
-                ],
-            ])
-
-
+            ->add('tel', TextType::class)
             ->add('gender', ChoiceType::class, [
                 'choices' => [
                     'Man' => 'Man',

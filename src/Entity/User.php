@@ -10,10 +10,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Constraints\Date;
-use Symfony\Component\Validator\Constraints\DateTime;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[UniqueEntity(fields: ['mail'], message: 'There is already an account with this email')]
+#[UniqueEntity(fields: ['tel'], message: 'There is already an account with this phone number')]
+
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -22,42 +24,81 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message:"First Name please")]
+    #[Assert\Length(
+        min: 3,
+        max: 10,
+    )]
+    #[Assert\Regex(
+        pattern: '/^[a-z]+$/i',
+        message: 'the first name must only contains characters[a-z].'
+    )]
+    #[Assert\NotBlank(message:"First Name is required")]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message:"Last Name please")]
+    #[Assert\Length(
+        min: 3,
+        max: 10,
+        exactMessage: 'less characters for your last name'
+    )]
+    #[Assert\Regex(
+        pattern: '/^[a-z]+$/i',
+        message: 'the last name must only contains characters[a-z].'
+    )]
+    #[Assert\NotBlank(message:"Last Name is required")]
+
     private ?string $prenom = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message:"Mail please")]
+    #[Assert\Email(
+        message: 'The email {{ value }} is not a valid email.',
+    )]
     private ?string $mail = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message:"Phone number please")]
+    #[Assert\NotBlank(message: "Phone number is required")]
+    #[Assert\Length(
+        min: 8,
+        max: 8,
+        exactMessage: 'The telephone number must consist of exactly 8 characters.'
+    )]
+    #[Assert\Regex(
+        pattern: '/^\d{8}$/',
+        message: 'The telephone number must consist of 8 numeric characters.'
+    )]
     private ?string $tel = null;
-
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message:"Gender please")]
+    #[Assert\NotBlank(message:"Gender is required")]
     private ?string $gender = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message:"Password please")]
+    #[Assert\NotBlank(message:"Password is required")]
+    #[Assert\Regex(
+        pattern: '/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()-_=+{};:,<.>]).{8,}$/',
+        message: 'Your password is too weak. Please include at least one uppercase letter, one lowercase letter, one digit, and one special character.'
+    )]
     private ?string $password = null;
 
     #[ORM\Column]
     private ?int $nb_points = null;
 
     #[ORM\Column]
-    #[Assert\NotBlank(message:"Age please")]
+    #[Assert\NotBlank(message:"Age is required")]
+    #[Assert\Positive]
     private ?int $age = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Assert\NotBlank(message:"Birthday please")]
+    #[Assert\NotBlank(message:"Birthday date is required")]
     private ?\DateTimeInterface $date_birthday = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message:"Confirm password please")]
+    #[Assert\Regex(
+        pattern: '/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()-_=+{};:,<.>]).{8,}$/',
+        message: 'Your password is too weak. Please include at least one uppercase letter, one lowercase letter, one digit, and one special character.'
+    )]
+    #[Assert\NotBlank(message:"Confirm password is required")]
+
     private ?string $Confirmpassword = null;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Product::class)]
@@ -215,7 +256,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUsername(): string
     {
         // Implement to return the username of the user
-        return $this->mail;
+        return $this->id;
     }
     public function getAllAttributes(): array
     {

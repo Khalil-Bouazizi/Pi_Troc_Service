@@ -25,11 +25,7 @@ class HomeController extends AbstractController
             return $this->redirectToRoute('homeOff');
         }
 
-        $products = $user->getProducts();
-
-        return $this->render('homeOn.html.twig', [
-            'products' => $products,
-        ]);
+        return $this->render('homeOn.html.twig');
 
         /*return $this->render('homeOn.html.twig');*/
     }
