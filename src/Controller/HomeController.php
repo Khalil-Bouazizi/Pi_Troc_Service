@@ -17,7 +17,7 @@ class HomeController extends AbstractController
     #[Route('/', name: 'homeOn')]
     public function homeOn(): Response
     {
-        // session
+        // session : getuser thezlk
         $user = $this->getUser();
         if (!$user)
         {

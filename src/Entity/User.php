@@ -104,9 +104,41 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Product::class)]
     private Collection $products;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Blog::class)]
+    private Collection $blogs;
+
+    #[ORM\OneToMany(mappedBy: 'id_user_reponse', targetEntity: ReponseBlog::class)]
+    private Collection $reponseBlogs;
+
+    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: ProdR::class)]
+    private Collection $prodRs;
+
+    #[ORM\OneToMany(mappedBy: 'id_user', targetEntity: Annonces::class)]
+    private Collection $annonces;
+
+    #[ORM\OneToMany(mappedBy: 'id_user', targetEntity: ProduitTroc::class)]
+    private Collection $produitTrocs;
+
+    #[ORM\OneToMany(mappedBy: 'id_user', targetEntity: Commandes::class)]
+    private Collection $commandes;
+
+    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: DonBienMateriel::class)]
+    private Collection $donBienMateriels;
+
+    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: DonArgent::class)]
+    private Collection $donArgents;
+
     public function __construct()
     {
         $this->products = new ArrayCollection();
+        $this->blogs = new ArrayCollection();
+        $this->reponseBlogs = new ArrayCollection();
+        $this->prodRs = new ArrayCollection();
+        $this->annonces = new ArrayCollection();
+        $this->produitTrocs = new ArrayCollection();
+        $this->commandes = new ArrayCollection();
+        $this->donBienMateriels = new ArrayCollection();
+        $this->donArgents = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -292,6 +324,246 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($product->getUser() === $this) {
                 $product->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Blog>
+     */
+    public function getBlogs(): Collection
+    {
+        return $this->blogs;
+    }
+
+    public function addBlog(Blog $blog): static
+    {
+        if (!$this->blogs->contains($blog)) {
+            $this->blogs->add($blog);
+            $blog->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBlog(Blog $blog): static
+    {
+        if ($this->blogs->removeElement($blog)) {
+            // set the owning side to null (unless already changed)
+            if ($blog->getUser() === $this) {
+                $blog->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ReponseBlog>
+     */
+    public function getReponseBlogs(): Collection
+    {
+        return $this->reponseBlogs;
+    }
+
+    public function addReponseBlog(ReponseBlog $reponseBlog): static
+    {
+        if (!$this->reponseBlogs->contains($reponseBlog)) {
+            $this->reponseBlogs->add($reponseBlog);
+            $reponseBlog->setIdUserReponse($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReponseBlog(ReponseBlog $reponseBlog): static
+    {
+        if ($this->reponseBlogs->removeElement($reponseBlog)) {
+            // set the owning side to null (unless already changed)
+            if ($reponseBlog->getIdUserReponse() === $this) {
+                $reponseBlog->setIdUserReponse(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ProdR>
+     */
+    public function getProdRs(): Collection
+    {
+        return $this->prodRs;
+    }
+
+    public function addProdR(ProdR $prodR): static
+    {
+        if (!$this->prodRs->contains($prodR)) {
+            $this->prodRs->add($prodR);
+            $prodR->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProdR(ProdR $prodR): static
+    {
+        if ($this->prodRs->removeElement($prodR)) {
+            // set the owning side to null (unless already changed)
+            if ($prodR->getUserId() === $this) {
+                $prodR->setUserId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Annonces>
+     */
+    public function getAnnonces(): Collection
+    {
+        return $this->annonces;
+    }
+
+    public function addAnnonce(Annonces $annonce): static
+    {
+        if (!$this->annonces->contains($annonce)) {
+            $this->annonces->add($annonce);
+            $annonce->setIdUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAnnonce(Annonces $annonce): static
+    {
+        if ($this->annonces->removeElement($annonce)) {
+            // set the owning side to null (unless already changed)
+            if ($annonce->getIdUser() === $this) {
+                $annonce->setIdUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ProduitTroc>
+     */
+    public function getProduitTrocs(): Collection
+    {
+        return $this->produitTrocs;
+    }
+
+    public function addProduitTroc(ProduitTroc $produitTroc): static
+    {
+        if (!$this->produitTrocs->contains($produitTroc)) {
+            $this->produitTrocs->add($produitTroc);
+            $produitTroc->setIdUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProduitTroc(ProduitTroc $produitTroc): static
+    {
+        if ($this->produitTrocs->removeElement($produitTroc)) {
+            // set the owning side to null (unless already changed)
+            if ($produitTroc->getIdUser() === $this) {
+                $produitTroc->setIdUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Commandes>
+     */
+    public function getCommandes(): Collection
+    {
+        return $this->commandes;
+    }
+
+    public function addCommande(Commandes $commande): static
+    {
+        if (!$this->commandes->contains($commande)) {
+            $this->commandes->add($commande);
+            $commande->setIdUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommande(Commandes $commande): static
+    {
+        if ($this->commandes->removeElement($commande)) {
+            // set the owning side to null (unless already changed)
+            if ($commande->getIdUser() === $this) {
+                $commande->setIdUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DonBienMateriel>
+     */
+    public function getDonBienMateriels(): Collection
+    {
+        return $this->donBienMateriels;
+    }
+
+    public function addDonBienMateriel(DonBienMateriel $donBienMateriel): static
+    {
+        if (!$this->donBienMateriels->contains($donBienMateriel)) {
+            $this->donBienMateriels->add($donBienMateriel);
+            $donBienMateriel->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDonBienMateriel(DonBienMateriel $donBienMateriel): static
+    {
+        if ($this->donBienMateriels->removeElement($donBienMateriel)) {
+            // set the owning side to null (unless already changed)
+            if ($donBienMateriel->getUserId() === $this) {
+                $donBienMateriel->setUserId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DonArgent>
+     */
+    public function getDonArgents(): Collection
+    {
+        return $this->donArgents;
+    }
+
+    public function addDonArgent(DonArgent $donArgent): static
+    {
+        if (!$this->donArgents->contains($donArgent)) {
+            $this->donArgents->add($donArgent);
+            $donArgent->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDonArgent(DonArgent $donArgent): static
+    {
+        if ($this->donArgents->removeElement($donArgent)) {
+            // set the owning side to null (unless already changed)
+            if ($donArgent->getUserId() === $this) {
+                $donArgent->setUserId(null);
             }
         }
 
