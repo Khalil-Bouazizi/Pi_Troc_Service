@@ -21,10 +21,7 @@ class UserAddType extends AbstractType
             ->add('nom', TextType::class)
             ->add('prenom', TextType::class)
             ->add('mail', TextType::class)
-            ->add('date_birthday', DateType::class, [
-                'widget' => 'single_text',
-                'years' => range(1960, date('Y')),
-            ])
+            ->add('date_birthday', DateType::class)
             ->add('tel', TextType::class)
             ->add('gender', ChoiceType::class, [
                 'choices' => [

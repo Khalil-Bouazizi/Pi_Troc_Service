@@ -14,7 +14,9 @@
             <th>Points</th>
             <th>Age</th>
             <th>Birthday</th>
+            <th>Status</th>
             <th>Access</th>
+            <th>Status</th>
         </tr>
         </thead>
         <tbody>
@@ -29,7 +31,9 @@
                 <td>{{ u.getNbPoints() }}</td>
                 <td>{{ u.getAge() }}</td>
                 <td>{{ u.getDateBirthday()|date('Y-m-d') }}</td>
+                <td>{{ u.getStatus() }}</td>
                 <td><a href="{{ path('user_delete', {'id': u.getId()}) }}"><i class="fa fa-trash"></i></a></td>
+                <td><a href="{{ path('user_active', {'id': u.getId()}) }}"><i class="fa">&#xf00c;</i></a></td>
             </tr>
         {% endfor %}
         </tbody>

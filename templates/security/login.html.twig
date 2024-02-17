@@ -1,6 +1,14 @@
 {% extends 'front.html.twig' %}
 
+
 {% block body %}
+    {% for message in app.flashes('failed') %}
+
+        <div class="alert alert-danger">
+            {{ message }}
+        </div>
+
+    {% endfor %}
     <section class="login py-5 border-top-1">
         <div class="container">
             <div class="row justify-content-center">

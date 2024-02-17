@@ -87,7 +87,7 @@ class UserController extends AbstractController
     }
 
     //delete user
-    #[Route('user/delete/{id}', name: 'user_delete')]
+    #[Route('/delete/{id}', name: 'user_delete')]
     public function user_delete($id, EntityManagerInterface $entityManager): Response
     {
         if(!$id) {
@@ -101,6 +101,21 @@ class UserController extends AbstractController
         return $this->redirectToRoute('user_display');
     }
 
+    // active user account by admin in the backend
+    #[Route('/{id}', name: 'user_active')]
+    public function user_active($id, EntityManagerInterface $entityManager): Response
+    {
+        $user = new User();
+        if(!$id) {
+            throw $this->createNotFoundException('No ID found');
+        }
+        $user = $entityManager->getRepository(User::class)->find($id);
+        if($user != null) {
+            $user->setStatus("active");
+            $entityManager->flush();
+        }
+        return $this->redirectToRoute('user_display');
+    }
     //modify user
 
     //forgot password user on login page
