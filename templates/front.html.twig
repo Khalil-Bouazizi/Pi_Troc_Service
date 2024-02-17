@@ -57,9 +57,9 @@
                         </button>
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul class="navbar-nav ml-auto main-nav ">
-                                <li class="nav-item @@home">
-                                    <a class="nav-link" href="{{ path('homeOff') }}">Home</a>
-                                </li>
+                                {% block home %}
+
+                                {% endblock %}
 {% block ajouterannonce %}
 
                                 {% endblock %}

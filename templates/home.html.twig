@@ -1,5 +1,10 @@
 {% extends 'front.html.twig' %}
 
+{% block home %}
+    <li class="nav-item @@home">
+        <a class="nav-link" href="{{ path('homeOff') }}">Home</a>
+    </li>
+{% endblock %}
 
 {% block login %}
     <header>

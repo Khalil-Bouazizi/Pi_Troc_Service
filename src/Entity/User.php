@@ -128,6 +128,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: DonArgent::class)]
     private Collection $donArgents;
 
+    #[ORM\Column(length: 255)]
+    private ?string $status = "inactive";
+
     public function __construct()
     {
         $this->products = new ArrayCollection();
@@ -566,6 +569,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $donArgent->setUserId(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): static
+    {
+        $this->status = $status;
 
         return $this;
     }

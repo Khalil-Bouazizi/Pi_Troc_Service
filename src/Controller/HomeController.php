@@ -17,16 +17,19 @@ class HomeController extends AbstractController
     #[Route('/', name: 'homeOn')]
     public function homeOn(): Response
     {
-        // session : getuser thezlk
         $user = $this->getUser();
         if (!$user)
         {
-            // kif yo9res logout traj3k homeOff
-            return $this->redirectToRoute('homeOff');
+            return $this->redirectToRoute('app_login');
         }
-
+        else
+        {
+            if($user->getStatus() == "inactive")
+            {
+                $this->addFlash('failed','User Account not already activated');
+                return $this->redirectToRoute('app_login');
+            }
+        }
         return $this->render('homeOn.html.twig');
-
-        /*return $this->render('homeOn.html.twig');*/
     }
 }
